@@ -218,53 +218,106 @@ class pantherTest extends PantherTestCase
             }
         }
 
-
-
-
-
-        
-
-
-        $client->executeScript("document.querySelector('".$removeAll."').click()");
+        for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+            try {
+                $client->executeScript("document.querySelector('".$removeAll."').click()");
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                if ($retryAttempts < 4) { sleep(2); }
+                else { throw($e); }
+            }
+        }
 
 
         // open pinescript tab (if its closed)
         $element = $client->findElement(WebDriverBy::cssSelector( $bottomAreaPane ));
         $bottomAreaPaneHeight = $element->getAttribute('style');
         if ($bottomAreaPaneHeight = 'height: 0px;') { 
-
-            $client->waitForVisibility( $pineScriptTab );
-            $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
-            
-            $client->waitForVisibility( $openScriptMenu );
-            $client->executeScript("document.querySelector('".$openScriptMenu."').click()");
+            for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+                try {
+                    $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
+                    break;
+                }
+                catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                    if ($retryAttempts < 4) { sleep(2); }
+                    else { throw($e); }
+                }
+            }
+            for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+                try {
+                    $client->executeScript("document.querySelector('".$openScriptMenu."').click()");
+                    break;
+                }
+                catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                    if ($retryAttempts < 4) { sleep(2); }
+                    else { throw($e); }
+                }
+            }
         }
 
 
         // strategy
-        //$client->waitForVisibility( $openScriptMenu );
-        sleep(1);
-        $client->executeScript("document.querySelector('".$openScriptMenu."').click()");
-
-        //$client->waitForVisibility( $openMyScript );
-        sleep(5);
-        $client->executeScript("document.querySelector('".$openMyScript."').click()");
-
-        //$client->waitForVisibility( $strategySearchInput );
-        sleep(1);
-        $client->findElement(WebDriverBy::cssSelector( $strategySearchInput ))->sendKeys( $strategyName );
-
-        //$client->waitForVisibility( $strategySelect );
-        sleep(1);
-        $client->executeScript("document.querySelector('".$strategySelect."').click()");
-
-        //$client->waitForVisibility( $closeStrategySearch );
-        sleep(1);
-        $client->executeScript("document.querySelector('".$closeStrategySearch."').click()");
-
-        //$client->waitForVisibility( $addToChart );
-        sleep(1);
-        $client->executeScript("document.querySelector('".$addToChart."').click()");
+        for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+            try {
+                $client->executeScript("document.querySelector('".$openScriptMenu."').click()");
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                if ($retryAttempts < 4) { sleep(2); }
+                else { throw($e); }
+            }
+        }
+        for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+            try {
+                $client->executeScript("document.querySelector('".$openMyScript."').click()");
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                if ($retryAttempts < 4) { sleep(2); }
+                else { throw($e); }
+            }
+        }
+        for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+            try {
+                $client->findElement(WebDriverBy::cssSelector( $strategySearchInput ))->sendKeys( $strategyName );
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                if ($retryAttempts < 4) { sleep(2); }
+                else { throw($e); }
+            }
+        }
+        for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+            try {
+                $client->executeScript("document.querySelector('".$strategySelect."').click()");
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                if ($retryAttempts < 4) { sleep(2); }
+                else { throw($e); }
+            }
+        }
+        for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+            try {
+                $client->executeScript("document.querySelector('".$closeStrategySearch."').click()");
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                if ($retryAttempts < 4) { sleep(2); }
+                else { throw($e); }
+            }
+        }
+        for ($retryAttempts = 0; $retryAttempts < 4; $retryAttempts++) {
+            try {
+                $client->executeScript("document.querySelector('".$addToChart."').click()");
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                if ($retryAttempts < 4) { sleep(2); }
+                else { throw($e); }
+            }
+        }
 
 
 
