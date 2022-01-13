@@ -97,7 +97,7 @@ class pantherTest extends PantherTestCase
 
         // pinescript
         $bottomAreaPane = '#bottom-area';
-        $pineScriptTab = '#footer-chart-panel div[class^="tabs-"] div[class^="tab-"]:nth-of-type(3)';
+        $pineScriptTab = '#footer-chart-panel div[class^="tabs-"] div[class^="tab-"]:nth-of-type(3) div[class^="title-"]';
         $strategyTesterTab = '#footer-chart-panel div[class^="tabs-"] div[class^="tab-"]:nth-of-type(4) div[class*=" active-"]';
         $openScriptMenu = '#bottom-area .bottom-widgetbar-content.scripteditor.tv-script-widget div[class^="rightControlsBlock-"] div[data-name="open-script"]';
         $openMyScript = '#overlap-manager-root div[class^="menuBox-"] div[class^="item-"]:first-of-type';
@@ -157,7 +157,7 @@ class pantherTest extends PantherTestCase
         $csvHeaders = array('Coin','Exchange','Date range','Interval','Net profit','B+H','Difference','Trades p/day','Total Trades closed','Trades open','Winning trades','Losing trades','Percent profitable','Win loss ratio','Sharpe Ratio','Sortino Ratio');
 
         // Other
-        $diagnoseTimer = 0;
+        $diagnoseTimer = 1;
         $retryAttempts = 4; // actually 4 = 5 as it starts from 0 not 1
         $retrySleep = 4;
 
@@ -399,13 +399,14 @@ class pantherTest extends PantherTestCase
         sleep($diagnoseTimer);
 
 
-        // open pinescript tab (if its closed)
+        // open pinescript tab: if its minimized
         for ($i = 0; true; $i++) {
             try {
                 $element = $client->findElement(WebDriverBy::cssSelector( $bottomAreaPane ));
+                $bottomAreaPaneHeight = $element->getAttribute('style');
                 break;
             }
-            catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+            catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
                 if ($i < $retryAttempts) { 
                     sleep($retrySleep); 
                 }
@@ -416,8 +417,7 @@ class pantherTest extends PantherTestCase
                 }
             }
         }
-
-        $bottomAreaPaneHeight = $element->getAttribute('style');
+        sleep($diagnoseTimer);
 
         if ($bottomAreaPaneHeight = 'height: 0px;') {
             for ($i = 0; true; $i++) {
@@ -440,6 +440,28 @@ class pantherTest extends PantherTestCase
         }
 
 
+        // select pinescript tab: if other tab is active
+        for ($i = 0; true; $i++) {
+            try {
+                if ($client->findElement(WebDriverBy::cssSelector( $strategyTesterTab ))->isDisplayed()) {
+                    $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
+                };
+                break;
+            }
+            catch (\Facebook\WebDriver\Exception\NoSuchElementException | \Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                if ($i < $retryAttempts) { 
+                    sleep($retrySleep); 
+                }
+                else { 
+                    echo '"Retry error: #' . $i .'"';
+                    $client->takeScreenshot('screenshot.png');
+                    throw($e);
+                }
+            }
+        }
+        sleep($diagnoseTimer);
+
+
         // strategy
         for ($i = 0; true; $i++) {
             try {
@@ -448,7 +470,8 @@ class pantherTest extends PantherTestCase
             }
             catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
                 if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
+                    sleep($retrySleep);
+                    continue;
                 }
                 else { 
                     echo '"Retry error: #' . $i .'"';
@@ -682,16 +705,16 @@ class pantherTest extends PantherTestCase
             foreach ($dateRanges as $dateRange) {
 
 
-                // check if 'Strategy Tester' tab is already open
+                // check if 'Strategy Tester' tab not open
                 for ($i = 0; true; $i++) {
                     try {
-                        if ($client->findElement(WebDriverBy::cssSelector( $strategyTesterTab ))) {
-                            // open 'Pine Editor' tab
-                            $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
+                        if (!$client->findElement(WebDriverBy::cssSelector( $strategyTesterTab ))) {
+                            // open 'Strategy Tester' tab
+                            $client->executeScript("document.querySelector('".$strategyTesterTab."').click()");
                         }
                         break;
                     }
-                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                         if ($i < $retryAttempts) { 
                             sleep($retrySleep); 
                         }
@@ -868,7 +891,7 @@ class pantherTest extends PantherTestCase
                             $netProfitData = strstr( $element->getAttribute('innerText'), ' %', true );
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -887,7 +910,7 @@ class pantherTest extends PantherTestCase
                             $buyAndHoldData = strstr( $element->getAttribute('innerText'), ' %', true );
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -908,7 +931,7 @@ class pantherTest extends PantherTestCase
                             $TotalTradesClosedData = $element->getAttribute('innerText');
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -932,7 +955,7 @@ class pantherTest extends PantherTestCase
                             $TotalTradesOpenData = $element->getAttribute('innerText');
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -970,7 +993,7 @@ class pantherTest extends PantherTestCase
                             $losingTradesData = $element->getAttribute('innerText');
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -989,7 +1012,7 @@ class pantherTest extends PantherTestCase
                             $percentProfitableData = strstr( $element->getAttribute('innerText'), ' %', true );
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -1008,7 +1031,7 @@ class pantherTest extends PantherTestCase
                             $winLossRatioData = $element->getAttribute('innerText');
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -1027,7 +1050,7 @@ class pantherTest extends PantherTestCase
                             $sharpeRatioData = $element->getAttribute('innerText');
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -1046,7 +1069,7 @@ class pantherTest extends PantherTestCase
                             $sortinoRatioData = $element->getAttribute('innerText');
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
