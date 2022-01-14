@@ -860,8 +860,6 @@ class pantherTest extends PantherTestCase
                     }
                     sleep($diagnoseTimer);
 
-                    sleep(2);
-
 
                     // make sure 'performance summary' pane is open
                     if (!$client->findElement(WebDriverBy::cssSelector( $performanceSummaryActive ))) {
@@ -884,6 +882,8 @@ class pantherTest extends PantherTestCase
                         sleep($diagnoseTimer);
                     }
 
+                    sleep(4);
+
                     // data points
                     for ($i = 0; true; $i++) {
                         try {
@@ -891,7 +891,11 @@ class pantherTest extends PantherTestCase
                             $netProfitData = strstr( $element->getText(), ' %', true );
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -910,7 +914,11 @@ class pantherTest extends PantherTestCase
                             $buyAndHoldData = strstr( $element->getText(), ' %', true );
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -931,7 +939,11 @@ class pantherTest extends PantherTestCase
                             $TotalTradesClosedData = $element->getText();
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -955,7 +967,11 @@ class pantherTest extends PantherTestCase
                             $TotalTradesOpenData = $element->getText();
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -974,7 +990,10 @@ class pantherTest extends PantherTestCase
                             $winningTradesData = $element->getText();
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -993,7 +1012,11 @@ class pantherTest extends PantherTestCase
                             $losingTradesData = $element->getText();
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -1012,7 +1035,11 @@ class pantherTest extends PantherTestCase
                             $percentProfitableData = strstr( $element->getText(), ' %', true );
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -1031,7 +1058,11 @@ class pantherTest extends PantherTestCase
                             $winLossRatioData = $element->getText();
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -1050,7 +1081,11 @@ class pantherTest extends PantherTestCase
                             $sharpeRatioData = $element->getText();
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
@@ -1069,7 +1104,11 @@ class pantherTest extends PantherTestCase
                             $sortinoRatioData = $element->getText();
                             break;
                         }
-                        catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        catch (
+                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                            \Facebook\WebDriver\Exception\NoSuchElementException |
+                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
                             if ($i < $retryAttempts) { 
                                 sleep($retrySleep); 
                             }
