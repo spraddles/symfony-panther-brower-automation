@@ -5,8 +5,8 @@
 
 ## Config:
 - rename the .ENV.EXAMPLE file to just '.ENV'
-- set TV_USERNAME in .ENV file (this is your TradingView username, e.g. TV_USERNAME=john.smith@gmail.com)
-- set TV_PASSWORD in .ENV file (this is your TradingView password, e.g. TV_PASSWORD=mypassword)
+- set TV_USERNAME in .ENV file (this is your TradingView username)
+- set TV_PASSWORD in .ENV file (this is your TradingView password)
 - [OPTIONAL] set PANTHER_NO_HEADLESS (set to 0 for no Chrome UI / run in background as opposed to launching a browser)
 - [OPTIONAL] change PANTHER_CHROME_ARGUMENTS to your custom requirements, if you like; you can use any argument so long as ChromeDriver supports it
 - add your Pinescript strategy into TradingView & save it (the exact name is important, take note of this for the $strategyName variable) & update this value
@@ -24,4 +24,5 @@
 - less combinations of coins, dataranges, and intervals will run faster... and vice versa
 - a new CSV file (Strategy_XXX.csv) will be created in the root directory
 - this file will be overwritten each time the test is run
+- also the CSV is progressively written to, meaning if you refresh the document (close & re-open it) you'll see the new data added, while the browser automation is still running
 - a screenshot PNG file will be created (in the root directory) each time there is an error, so you can see where the automation fails
