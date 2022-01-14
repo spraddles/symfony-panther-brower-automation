@@ -17,8 +17,8 @@
 ###< phpunit/phpunit ###
 
 *.log
-/.vscode
-.DS_store
-.env
-.png
-.csv
+*.vscode
+*.DS_store
+*.env
+*.png
+*.csv
