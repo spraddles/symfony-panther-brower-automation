@@ -157,7 +157,7 @@ class pantherTest extends PantherTestCase
         $csvHeaders = array('Coin','Exchange','Date range','Interval','Net profit','B+H','Difference','Trades p/day','Total Trades closed','Trades open','Winning trades','Losing trades','Percent profitable','Win loss ratio','Sharpe Ratio','Sortino Ratio');
 
         // Other
-        $diagnoseTimer = 1;
+        $diagnoseTimer = 0;
         $retryAttempts = 4; // actually 4 = 5 as it starts from 0 not 1
         $retrySleep = 4;
 
@@ -443,7 +443,7 @@ class pantherTest extends PantherTestCase
         // select pinescript tab: if other tab is active
         for ($i = 0; true; $i++) {
             try {
-                if ($client->findElement(WebDriverBy::cssSelector( $strategyTesterTab ))->isDisplayed()) {
+                if (count($client->findElements(WebDriverBy::cssSelector( $strategyTesterTab ))) !== 0) {
                     $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
                 };
                 break;
@@ -727,8 +727,6 @@ class pantherTest extends PantherTestCase
                 }
                 sleep($diagnoseTimer);
 
-                sleep(2);
-
                 // change date range
                 for ($i = 0; true; $i++) {
                     try {
@@ -862,6 +860,8 @@ class pantherTest extends PantherTestCase
                     }
                     sleep($diagnoseTimer);
 
+                    sleep(2);
+
 
                     // make sure 'performance summary' pane is open
                     if (!$client->findElement(WebDriverBy::cssSelector( $performanceSummaryActive ))) {
@@ -888,7 +888,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $netProfit ));
-                            $netProfitData = strstr( $element->getAttribute('innerText'), ' %', true );
+                            $netProfitData = strstr( $element->getText(), ' %', true );
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -907,7 +907,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $buyAndHold ));
-                            $buyAndHoldData = strstr( $element->getAttribute('innerText'), ' %', true );
+                            $buyAndHoldData = strstr( $element->getText(), ' %', true );
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -928,7 +928,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesClosed ));
-                            $TotalTradesClosedData = $element->getAttribute('innerText');
+                            $TotalTradesClosedData = $element->getText();
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -952,7 +952,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesOpen ));
-                            $TotalTradesOpenData = $element->getAttribute('innerText');
+                            $TotalTradesOpenData = $element->getText();
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -971,7 +971,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $winningTrades ));
-                            $winningTradesData = $element->getAttribute('innerText');
+                            $winningTradesData = $element->getText();
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
@@ -990,7 +990,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $losingTrades ));
-                            $losingTradesData = $element->getAttribute('innerText');
+                            $losingTradesData = $element->getText();
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -1009,7 +1009,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $percentProfitable ));
-                            $percentProfitableData = strstr( $element->getAttribute('innerText'), ' %', true );
+                            $percentProfitableData = strstr( $element->getText(), ' %', true );
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -1028,7 +1028,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $winLossRatio ));
-                            $winLossRatioData = $element->getAttribute('innerText');
+                            $winLossRatioData = $element->getText();
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -1047,7 +1047,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $sharpeRatio ));
-                            $sharpeRatioData = $element->getAttribute('innerText');
+                            $sharpeRatioData = $element->getText();
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -1066,7 +1066,7 @@ class pantherTest extends PantherTestCase
                     for ($i = 0; true; $i++) {
                         try {
                             $element = $client->findElement(WebDriverBy::cssSelector( $sortinoRatio ));
-                            $sortinoRatioData = $element->getAttribute('innerText');
+                            $sortinoRatioData = $element->getText();
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\StaleElementReferenceException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
