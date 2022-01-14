@@ -887,6 +887,7 @@ class pantherTest extends PantherTestCase
                     // data points
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $netProfit ));
                             $netProfitData = strstr( $element->getText(), ' %', true );
                             break;
@@ -910,6 +911,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $buyAndHold ));
                             $buyAndHoldData = strstr( $element->getText(), ' %', true );
                             break;
@@ -931,10 +933,12 @@ class pantherTest extends PantherTestCase
                     }
                     sleep($diagnoseTimer);
 
+                    $difference = NULL;
                     $difference = (int)$netProfitData - (int)$buyAndHoldData;
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesClosed ));
                             $TotalTradesClosedData = $element->getText();
                             break;
@@ -963,6 +967,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesOpen ));
                             $TotalTradesOpenData = $element->getText();
                             break;
@@ -986,6 +991,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $winningTrades ));
                             $winningTradesData = $element->getText();
                             break;
@@ -1008,6 +1014,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $losingTrades ));
                             $losingTradesData = $element->getText();
                             break;
@@ -1031,6 +1038,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $percentProfitable ));
                             $percentProfitableData = strstr( $element->getText(), ' %', true );
                             break;
@@ -1054,6 +1062,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $winLossRatio ));
                             $winLossRatioData = $element->getText();
                             break;
@@ -1077,6 +1086,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $sharpeRatio ));
                             $sharpeRatioData = $element->getText();
                             break;
@@ -1100,6 +1110,7 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
+                            $element = NULL;
                             $element = $client->findElement(WebDriverBy::cssSelector( $sortinoRatio ));
                             $sortinoRatioData = $element->getText();
                             break;
