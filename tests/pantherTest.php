@@ -25,35 +25,29 @@ class pantherTest extends PantherTestCase
 
         /* VARIABLES * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        $exchanges = [
-            'binance'
-        ];
 
-        // login
-        $website = 'https://www.tradingview.com/';
-        $userArea = '.tv-header__user-menu-button.tv-header__user-menu-button--anonymous.js-header-user-menu-button';
-        $signInLink = 'div[class^="item-"][data-name="header-user-menu-sign-in"]';
-        $emailLink = '.tv-signin-dialog__social.tv-signin-dialog__toggle-email.js-show-email';
-        $focusUser = '.tv-signin-dialog input[id^="email-signin__user-name-input__"]';
-        $focusPassword = '.tv-signin-dialog input[id^="email-signin__password-input__"]';
-        $username = $_ENV['TV_USERNAME'];
-        $password = $_ENV['TV_PASSWORD'];
-        $signInButton = '.tv-signin-dialog__footer button[id^="email-signin__submit-button__"]';
-        $chartLink = 'a[data-main-menu-root-track-id="chart"]';
+        // exchange
+        $exchange = 'Binance';
+
+        // strategies
+        $strategies = [
+            'Strategy_2',
+            'Strategy_6',
+        ];
 
         // coins
         $coins = [
 
             // USDT pairs
-            /*'BTCUSDT',
+            'BTCUSDT',
             'ETHUSDT',
             'BNBUSDT',
             'SOLUSDT',
             'ADAUSDT',
             'XRPUSDT',
             'DOTUSDT',
-            'LUNAUSDT',
             'MATICUSDT',
+            'LUNAUSDT',
             'LTCUSDT',
             'TRXUSDT',
             'BCHUSDT',
@@ -62,7 +56,7 @@ class pantherTest extends PantherTestCase
             'WAXPUSDT'
 
             // other pairs
-            'ETHBTC',
+            /*'ETHBTC',
             'MATICBTC',
             'XRPBTC',
             'LUNABTC',
@@ -84,7 +78,7 @@ class pantherTest extends PantherTestCase
             'EOSETH',
             'ADAETH',
             'LTCETH',
-            'TRXETH',*/
+            'TRXETH',
             'DOTETH',
             'MATICBNB',
             'XRPBNB',
@@ -98,11 +92,22 @@ class pantherTest extends PantherTestCase
             'DOTBNB',
             'WAXPBNB',
             'BCHBNB',
-            'XTZBNB'
+            'XTZBNB'*/
         ];
 
+        // login
+        $website = 'https://www.tradingview.com/';
+        $userArea = '.tv-header__user-menu-button.tv-header__user-menu-button--anonymous.js-header-user-menu-button';
+        $signInLink = 'div[class^="item-"][data-name="header-user-menu-sign-in"]';
+        $emailLink = '.tv-signin-dialog__social.tv-signin-dialog__toggle-email.js-show-email';
+        $focusUser = '.tv-signin-dialog input[id^="email-signin__user-name-input__"]';
+        $focusPassword = '.tv-signin-dialog input[id^="email-signin__password-input__"]';
+        $username = $_ENV['TV_USERNAME'];
+        $password = $_ENV['TV_PASSWORD'];
+        $signInButton = '.tv-signin-dialog__footer button[id^="email-signin__submit-button__"]';
+        $chartLink = 'a[data-main-menu-root-track-id="chart"]';
+
         // coins & exchanges
-        $exchange = 'Binance';
         $coinList = '#header-toolbar-symbol-search';
         $exchangeButton = '[data-name="symbol-search-items-dialog"] .apply-common-tooltip';
         $exchangeInput = '[data-outside-boundary-for="exchanges-search"] input';
@@ -120,9 +125,8 @@ class pantherTest extends PantherTestCase
         $pineScriptTab = '#footer-chart-panel div[class^="tabs-"] div[class^="tab-"]:nth-of-type(3) div[class^="title-"]';
         $strategyTesterTab = '#footer-chart-panel div[class^="tabs-"] div[class^="tab-"]:nth-of-type(4) div[class*=" active-"]';
         $openScriptMenu = '#bottom-area .bottom-widgetbar-content.scripteditor.tv-script-widget div[class^="rightControlsBlock-"] div[data-name="open-script"]';
-        $openMyScript = '#overlap-manager-root div[class^="menuBox-"] div[class^="item-"]:first-of-type';
+        $openMyScript = '#overlap-manager-root div[class^="menuWrap-"] div[class^="scrollWrap-"] div[class^="menuBox-"] :nth-child(4)';
         $strategySearchInput = '#overlap-manager-root div[class^="container-"]:nth-of-type(2) div[class^="inputContainer-"] input';
-        $strategyName = 'Strategy_2';
         $strategySelect = '#overlap-manager-root div[class^="dialog-"] div[class^="wrapper-"] div[class^="container-"]:nth-of-type(4) div[class^="list-"] div[class^="itemRow-"] div[class*="itemInfo-"]';
         $closeStrategySearch = 'div[data-outside-boundary-for="open-user-script-dialog"] div[class^="wrapper-"] div[class^="container-"]:first-of-type span[class^="close-"]';
         $addToChart = '#bottom-area .bottom-widgetbar-content.scripteditor.tv-script-widget #tv-script-pine-editor-header-root div[class^="content-"] div[class^="rightControlsBlock-"] div[data-name="add-script-to-chart"]';
@@ -379,69 +383,15 @@ class pantherTest extends PantherTestCase
         }
         sleep($diagnoseTimer);
 
+
+        // loop through strategies
+        foreach ($strategies as $strategy) {
+
         
-        // clear chart
-        for ($i = 0; true; $i++) {
-            try {
-                $client->executeScript("document.querySelector('".$arrowOption."').click()");
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-        for ($i = 0; true; $i++) {
-            try {
-                $client->executeScript("document.querySelector('".$removeAll."').click()");
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-
-        // open pinescript tab: if its minimized
-        for ($i = 0; true; $i++) {
-            try {
-                $element = $client->findElement(WebDriverBy::cssSelector( $bottomAreaPane ));
-                $bottomAreaPaneHeight = $element->getAttribute('style');
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-        if ($bottomAreaPaneHeight = 'height: 0px;') {
+            // clear chart
             for ($i = 0; true; $i++) {
                 try {
-                    $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
+                    $client->executeScript("document.querySelector('".$arrowOption."').click()");
                     break;
                 }
                 catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -456,162 +406,120 @@ class pantherTest extends PantherTestCase
                 }
             }
             sleep($diagnoseTimer);
-        }
+
+            for ($i = 0; true; $i++) {
+                try {
+                    $client->executeScript("document.querySelector('".$removeAll."').click()");
+                    break;
+                }
+                catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                    if ($i < $retryAttempts) { 
+                        sleep($retrySleep); 
+                    }
+                    else { 
+                        echo '"Retry error: #' . $i .'"';
+                        $client->takeScreenshot('screenshot.png');
+                        throw($e);
+                    }
+                }
+            }
+            sleep($diagnoseTimer);
 
 
-        // select pinescript tab: if other tab is active
-        for ($i = 0; true; $i++) {
-            try {
-                if (count($client->findElements(WebDriverBy::cssSelector( $strategyTesterTab ))) !== 0) {
-                    $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
-                };
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\NoSuchElementException | \Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
+            // open pinescript tab: if its minimized
+            for ($i = 0; true; $i++) {
+                try {
+                    $element = $client->findElement(WebDriverBy::cssSelector( $bottomAreaPane ));
+                    $bottomAreaPaneHeight = $element->getAttribute('style');
+                    break;
                 }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
+                catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                    if ($i < $retryAttempts) { 
+                        sleep($retrySleep); 
+                    }
+                    else { 
+                        echo '"Retry error: #' . $i .'"';
+                        $client->takeScreenshot('screenshot.png');
+                        throw($e);
+                    }
                 }
             }
-        }
-        sleep($diagnoseTimer);
+            sleep($diagnoseTimer);
 
-
-        // strategy
-        for ($i = 0; true; $i++) {
-            try {
-                $client->executeScript("document.querySelector('".$openScriptMenu."').click()");
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep);
-                    continue;
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-        for ($i = 0; true; $i++) {
-            try {
-                $client->executeScript("document.querySelector('".$openMyScript."').click()");
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-        for ($i = 0; true; $i++) {
-            try {
-                $client->findElement(WebDriverBy::cssSelector( $strategySearchInput ))->sendKeys( $strategyName );
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-        for ($i = 0; true; $i++) {
-            try {
+            if ($bottomAreaPaneHeight = 'height: 0px;') {
                 sleep(1);
-                $client->executeScript("document.querySelector('".$strategySelect."').click()");
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
+                for ($i = 0; true; $i++) {
+                    try {
+                        $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
+                        break;
+                    }
+                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                        if ($i < $retryAttempts) { 
+                            sleep($retrySleep); 
+                        }
+                        else { 
+                            echo '"Retry error: #' . $i .'"';
+                            $client->takeScreenshot('screenshot.png');
+                            throw($e);
+                        }
+                    }
                 }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
+                sleep($diagnoseTimer);
             }
-        }
-        sleep($diagnoseTimer);
-
-        for ($i = 0; true; $i++) {
-            try {
-                $client->executeScript("document.querySelector('".$closeStrategySearch."').click()");
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-        sleep(2);
-
-        for ($i = 0; true; $i++) {
-            try {
-                $client->executeScript("document.querySelector('".$addToChart."').click()");
-                break;
-            }
-            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                if ($i < $retryAttempts) { 
-                    sleep($retrySleep); 
-                }
-                else { 
-                    echo '"Retry error: #' . $i .'"';
-                    $client->takeScreenshot('screenshot.png');
-                    throw($e);
-                }
-            }
-        }
-        sleep($diagnoseTimer);
-
-        
-        // prepare CSV file
-        $CSVfilename = $strategyName.'.csv';
-        $file = fopen( $CSVfilename, 'w' );
-        if ($file === false) {
-            die('Error opening the file ' . $CSVfilename);
-        };
-        fputcsv( $file, $csvHeaders );
 
 
-        // loop through coins
-        foreach ($coins as $coin) { 
-            
-
-            // choose exchange
+            // select pinescript tab: if other tab is active
             for ($i = 0; true; $i++) {
                 try {
-                    $client->executeScript("document.querySelector('".$coinList."').click()");
+                    if (count($client->findElements(WebDriverBy::cssSelector( $strategyTesterTab ))) !== 0) {
+                        $client->executeScript("document.querySelector('".$pineScriptTab."').click()");
+                    };
+                    break;
+                }
+                catch (\Facebook\WebDriver\Exception\NoSuchElementException | \Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                    if ($i < $retryAttempts) { 
+                        sleep($retrySleep); 
+                    }
+                    else { 
+                        echo '"Retry error: #' . $i .'"';
+                        $client->takeScreenshot('screenshot.png');
+                        throw($e);
+                    }
+                }
+            }
+            sleep($diagnoseTimer);
+
+
+            // strategy
+            for ($i = 0; true; $i++) {
+                try {
+                    $client->executeScript("document.querySelector('".$openScriptMenu."').click()");
+                    break;
+                }
+                catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                    if ($i < $retryAttempts) { 
+                        sleep($retrySleep);
+                        continue;
+                    }
+                    else { 
+                        echo '"Retry error: #' . $i .'"';
+                        $client->takeScreenshot('screenshot.png');
+                        throw($e);
+                    }
+                }
+            }
+            sleep($diagnoseTimer);
+
+            for ($i = 0; true; $i++) {
+                try {
+                    //$client->executeScript("document.querySelector('".$openMyScript."').click()");
+
+                    $xpathMyScript = '//div[contains(text(),"My script…")]';
+                    $client->executeScript("document.evaluate('".$xpathMyScript."', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null ).singleNodeValue.click()");
+
+
+
+
                     break;
                 }
                 catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -629,25 +537,7 @@ class pantherTest extends PantherTestCase
 
             for ($i = 0; true; $i++) {
                 try {
-                    $client->executeScript("document.querySelector('".$exchangeButton."').click()");
-                    break;
-                }
-                catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                    if ($i < $retryAttempts) { 
-                        sleep($retrySleep); 
-                    }
-                    else { 
-                        echo '"Retry error: #' . $i .'"';
-                        $client->takeScreenshot('screenshot.png');
-                        throw($e);
-                    }
-                }
-            }
-            sleep($diagnoseTimer);
-
-            for ($i = 0; true; $i++) {
-                try {
-                    $client->findElement(WebDriverBy::cssSelector( $exchangeInput ))->sendKeys( $exchange );
+                    $client->findElement(WebDriverBy::cssSelector( $strategySearchInput ))->sendKeys( $strategy );
                     break;
                 }
                 catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
@@ -665,7 +555,8 @@ class pantherTest extends PantherTestCase
 
             for ($i = 0; true; $i++) {
                 try {
-                    $client->executeScript("document.querySelector('".$exchangeName."').click()");
+                    sleep(1);
+                    $client->executeScript("document.querySelector('".$strategySelect."').click()");
                     break;
                 }
                 catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -681,15 +572,12 @@ class pantherTest extends PantherTestCase
             }
             sleep($diagnoseTimer);
 
-
-            // choose coin
             for ($i = 0; true; $i++) {
                 try {
-                    $client->findElement(WebDriverBy::cssSelector( $coinInput ))->clear();
-                    $client->findElement(WebDriverBy::cssSelector( $coinInput ))->sendKeys( $coin );
+                    $client->executeScript("document.querySelector('".$closeStrategySearch."').click()");
                     break;
                 }
-                catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
                     if ($i < $retryAttempts) { 
                         sleep($retrySleep); 
                     }
@@ -702,9 +590,11 @@ class pantherTest extends PantherTestCase
             }
             sleep($diagnoseTimer);
 
+            sleep(2);
+
             for ($i = 0; true; $i++) {
                 try {
-                    $client->executeScript("document.querySelector('".$coinSelect."').click()");
+                    $client->executeScript("document.querySelector('".$addToChart."').click()");
                     break;
                 }
                 catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -721,36 +611,23 @@ class pantherTest extends PantherTestCase
             sleep($diagnoseTimer);
 
             
-            // date ranges loop
-            foreach ($dateRanges as $dateRange) {
+            // prepare CSV file
+            $CSVfilename = $strategy.'.csv';
+            $file = fopen( $CSVfilename, 'w' );
+            if ($file === false) {
+                die('Error opening the file ' . $CSVfilename);
+            };
+            fputcsv( $file, $csvHeaders );
 
 
-                // check if 'Strategy Tester' tab not open
+            // loop through coins
+            foreach ($coins as $coin) { 
+                
+
+                // choose exchange
                 for ($i = 0; true; $i++) {
                     try {
-                        if (!$client->findElement(WebDriverBy::cssSelector( $strategyTesterTab ))) {
-                            // open 'Strategy Tester' tab
-                            $client->executeScript("document.querySelector('".$strategyTesterTab."').click()");
-                        }
-                        break;
-                    }
-                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
-                        if ($i < $retryAttempts) { 
-                            sleep($retrySleep); 
-                        }
-                        else { 
-                            echo '"Retry error: #' . $i .'"';
-                            $client->takeScreenshot('screenshot.png');
-                            throw($e);
-                        }
-                    }
-                }
-                sleep($diagnoseTimer);
-
-                // change date range
-                for ($i = 0; true; $i++) {
-                    try {
-                        $client->executeScript("document.querySelector('".$chartSettings."').click()");
+                        $client->executeScript("document.querySelector('".$coinList."').click()");
                         break;
                     }
                     catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -768,7 +645,7 @@ class pantherTest extends PantherTestCase
 
                 for ($i = 0; true; $i++) {
                     try {
-                        $client->executeScript("document.querySelector('".$inputsTab."').click()");
+                        $client->executeScript("document.querySelector('".$exchangeButton."').click()");
                         break;
                     }
                     catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -786,10 +663,10 @@ class pantherTest extends PantherTestCase
 
                 for ($i = 0; true; $i++) {
                     try {
-                        $client->executeScript("document.querySelector('".$selectArrow."').click()");
+                        $client->findElement(WebDriverBy::cssSelector( $exchangeInput ))->sendKeys( $exchange );
                         break;
                     }
-                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException | \Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                    catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
                         if ($i < $retryAttempts) { 
                             sleep($retrySleep); 
                         }
@@ -804,26 +681,7 @@ class pantherTest extends PantherTestCase
 
                 for ($i = 0; true; $i++) {
                     try {
-                        $client->executeScript("document.querySelector('".$dateRange[0]."').click()");
-                        break;
-                    }
-                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
-                        if ($i < $retryAttempts) { 
-                            sleep($retrySleep); 
-                        }
-                        else { 
-                            echo '"Retry error: #' . $i .'"';
-                            $client->takeScreenshot('screenshot.png');
-                            throw($e);
-                        }
-                    }
-                }
-                sleep($diagnoseTimer);
-
-                for ($i = 0; true; $i++) {
-                    try {
-                        $client->executeScript("document.querySelector('".$okButton."').click()");
-                        sleep(1);
+                        $client->executeScript("document.querySelector('".$exchangeName."').click()");
                         break;
                     }
                     catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -840,14 +698,75 @@ class pantherTest extends PantherTestCase
                 sleep($diagnoseTimer);
 
 
-                // intervals loop
-                foreach ($intervals as $interval) {
+                // choose coin
+                for ($i = 0; true; $i++) {
+                    try {
+                        $client->findElement(WebDriverBy::cssSelector( $coinInput ))->clear();
+                        $client->findElement(WebDriverBy::cssSelector( $coinInput ))->sendKeys( $coin );
+                        break;
+                    }
+                    catch (\Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                        if ($i < $retryAttempts) { 
+                            sleep($retrySleep); 
+                        }
+                        else { 
+                            echo '"Retry error: #' . $i .'"';
+                            $client->takeScreenshot('screenshot.png');
+                            throw($e);
+                        }
+                    }
+                }
+                sleep($diagnoseTimer);
+
+                for ($i = 0; true; $i++) {
+                    try {
+                        $client->executeScript("document.querySelector('".$coinSelect."').click()");
+                        break;
+                    }
+                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                        if ($i < $retryAttempts) { 
+                            sleep($retrySleep); 
+                        }
+                        else { 
+                            echo '"Retry error: #' . $i .'"';
+                            $client->takeScreenshot('screenshot.png');
+                            throw($e);
+                        }
+                    }
+                }
+                sleep($diagnoseTimer);
+
+                
+                // date ranges loop
+                foreach ($dateRanges as $dateRange) {
 
 
-                    // change time interval
+                    // check if 'Strategy Tester' tab not open
                     for ($i = 0; true; $i++) {
                         try {
-                            $client->executeScript("document.querySelector('".$intervalMenu."').click()");
+                            if (!$client->findElement(WebDriverBy::cssSelector( $strategyTesterTab ))) {
+                                // open 'Strategy Tester' tab
+                                $client->executeScript("document.querySelector('".$strategyTesterTab."').click()");
+                            }
+                            break;
+                        }
+                        catch (\Facebook\WebDriver\Exception\JavascriptErrorException | \Facebook\WebDriver\Exception\NoSuchElementException $e) {
+                            if ($i < $retryAttempts) { 
+                                sleep($retrySleep); 
+                            }
+                            else { 
+                                echo '"Retry error: #' . $i .'"';
+                                $client->takeScreenshot('screenshot.png');
+                                throw($e);
+                            }
+                        }
+                    }
+                    sleep($diagnoseTimer);
+
+                    // change date range
+                    for ($i = 0; true; $i++) {
+                        try {
+                            $client->executeScript("document.querySelector('".$chartSettings."').click()");
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -865,7 +784,62 @@ class pantherTest extends PantherTestCase
 
                     for ($i = 0; true; $i++) {
                         try {
-                            $client->executeScript("document.querySelector('".$interval[0]."').click()");
+                            $client->executeScript("document.querySelector('".$inputsTab."').click()");
+                            break;
+                        }
+                        catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                            if ($i < $retryAttempts) { 
+                                sleep($retrySleep); 
+                            }
+                            else { 
+                                echo '"Retry error: #' . $i .'"';
+                                $client->takeScreenshot('screenshot.png');
+                                throw($e);
+                            }
+                        }
+                    }
+                    sleep($diagnoseTimer);
+
+                    for ($i = 0; true; $i++) {
+                        try {
+                            $client->executeScript("document.querySelector('".$selectArrow."').click()");
+                            break;
+                        }
+                        catch (\Facebook\WebDriver\Exception\JavascriptErrorException | \Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
+                            if ($i < $retryAttempts) { 
+                                sleep($retrySleep); 
+                            }
+                            else { 
+                                echo '"Retry error: #' . $i .'"';
+                                $client->takeScreenshot('screenshot.png');
+                                throw($e);
+                            }
+                        }
+                    }
+                    sleep($diagnoseTimer);
+
+                    for ($i = 0; true; $i++) {
+                        try {
+                            $client->executeScript("document.querySelector('".$dateRange[0]."').click()");
+                            break;
+                        }
+                        catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                            if ($i < $retryAttempts) { 
+                                sleep($retrySleep); 
+                            }
+                            else { 
+                                echo '"Retry error: #' . $i .'"';
+                                $client->takeScreenshot('screenshot.png');
+                                throw($e);
+                            }
+                        }
+                    }
+                    sleep($diagnoseTimer);
+
+                    for ($i = 0; true; $i++) {
+                        try {
+                            $client->executeScript("document.querySelector('".$okButton."').click()");
+                            sleep(1);
                             break;
                         }
                         catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -882,11 +856,14 @@ class pantherTest extends PantherTestCase
                     sleep($diagnoseTimer);
 
 
-                    // make sure 'performance summary' pane is open
-                    if (!$client->findElement(WebDriverBy::cssSelector( $performanceSummaryActive ))) {
+                    // intervals loop
+                    foreach ($intervals as $interval) {
+
+
+                        // change time interval
                         for ($i = 0; true; $i++) {
                             try {
-                                $client->executeScript("document.querySelector('".$performanceSummaryTab."').click()");
+                                $client->executeScript("document.querySelector('".$intervalMenu."').click()");
                                 break;
                             }
                             catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -901,279 +878,319 @@ class pantherTest extends PantherTestCase
                             }
                         }
                         sleep($diagnoseTimer);
-                    }
 
-                    sleep(3);
-
-                    // data points
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $netProfit ));
-                            $netProfitData = strstr( $element->getText(), ' %', true );
-                            break;
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $client->executeScript("document.querySelector('".$interval[0]."').click()");
+                                break;
+                            }
+                            catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
                         }
-                        catch (
+                        sleep($diagnoseTimer);
+
+
+                        // make sure 'performance summary' pane is open
+                        if (!$client->findElement(WebDriverBy::cssSelector( $performanceSummaryActive ))) {
+                            for ($i = 0; true; $i++) {
+                                try {
+                                    $client->executeScript("document.querySelector('".$performanceSummaryTab."').click()");
+                                    break;
+                                }
+                                catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                                    if ($i < $retryAttempts) { 
+                                        sleep($retrySleep); 
+                                    }
+                                    else { 
+                                        echo '"Retry error: #' . $i .'"';
+                                        $client->takeScreenshot('screenshot.png');
+                                        throw($e);
+                                    }
+                                }
+                            }
+                            sleep($diagnoseTimer);
+                        }
+
+                        sleep(3);
+
+                        // data points
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $netProfit ));
+                                $netProfitData = strstr( $element->getText(), ' %', true );
+                                break;
+                            }
+                            catch (
+                                    \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                    \Facebook\WebDriver\Exception\NoSuchElementException |
+                                    \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                    \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $buyAndHold ));
+                                $buyAndHoldData = strstr( $element->getText(), ' %', true );
+                                break;
+                            }
+                            catch (
                                 \Facebook\WebDriver\Exception\StaleElementReferenceException | 
                                 \Facebook\WebDriver\Exception\NoSuchElementException |
                                 \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
                                 \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
                             }
                         }
+                        sleep($diagnoseTimer);
+
+                        $difference = NULL;
+                        $difference = (int)$netProfitData - (int)$buyAndHoldData;
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesClosed ));
+                                $TotalTradesClosedData = $element->getText();
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+                        
+                        if( ( ((int)$TotalTradesClosedData !== 0))  || ((int)$dateRange[2] !== 0) ) {
+                            $tradesPerDay = number_format( (int)$TotalTradesClosedData / (int)$dateRange[2], 2 );
+                        }
+                        else $tradesPerDay = 0;
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesOpen ));
+                                $TotalTradesOpenData = $element->getText();
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $winningTrades ));
+                                $winningTradesData = $element->getText();
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $losingTrades ));
+                                $losingTradesData = $element->getText();
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $percentProfitable ));
+                                $percentProfitableData = strstr( $element->getText(), ' %', true );
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $winLossRatio ));
+                                $winLossRatioData = $element->getText();
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $sharpeRatio ));
+                                $sharpeRatioData = $element->getText();
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+                        for ($i = 0; true; $i++) {
+                            try {
+                                $element = NULL;
+                                $element = $client->findElement(WebDriverBy::cssSelector( $sortinoRatio ));
+                                $sortinoRatioData = $element->getText();
+                                break;
+                            }
+                            catch (
+                                \Facebook\WebDriver\Exception\StaleElementReferenceException | 
+                                \Facebook\WebDriver\Exception\NoSuchElementException |
+                                \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
+                                \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
+                                if ($i < $retryAttempts) { 
+                                    sleep($retrySleep); 
+                                }
+                                else { 
+                                    echo '"Retry error: #' . $i .'"';
+                                    $client->takeScreenshot('screenshot.png');
+                                    throw($e);
+                                }
+                            }
+                        }
+                        sleep($diagnoseTimer);
+
+
+                        // CSV add data
+                        $lines = [
+                            $coin,
+                            $exchange,
+                            $dateRange[1],
+                            $interval[1],
+                            $netProfitData,
+                            $buyAndHoldData,
+                            $difference,
+                            $tradesPerDay,
+                            $TotalTradesClosedData,
+                            $TotalTradesOpenData,
+                            $winningTradesData,
+                            $losingTradesData,
+                            $percentProfitableData,
+                            $winLossRatioData,
+                            $sharpeRatioData,
+                            $sortinoRatioData
+                        ];
+                        fputcsv( $file, $lines );
                     }
-                    sleep($diagnoseTimer);
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $buyAndHold ));
-                            $buyAndHoldData = strstr( $element->getText(), ' %', true );
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-                    $difference = NULL;
-                    $difference = (int)$netProfitData - (int)$buyAndHoldData;
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesClosed ));
-                            $TotalTradesClosedData = $element->getText();
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-                    
-                    if( ( ((int)$TotalTradesClosedData !== 0))  || ((int)$dateRange[2] !== 0) ) {
-                        $tradesPerDay = number_format( (int)$TotalTradesClosedData / (int)$dateRange[2], 2 );
-                    }
-                    else $tradesPerDay = 0;
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $TotalTradesOpen ));
-                            $TotalTradesOpenData = $element->getText();
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $winningTrades ));
-                            $winningTradesData = $element->getText();
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $losingTrades ));
-                            $losingTradesData = $element->getText();
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $percentProfitable ));
-                            $percentProfitableData = strstr( $element->getText(), ' %', true );
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $winLossRatio ));
-                            $winLossRatioData = $element->getText();
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $sharpeRatio ));
-                            $sharpeRatioData = $element->getText();
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-                    for ($i = 0; true; $i++) {
-                        try {
-                            $element = NULL;
-                            $element = $client->findElement(WebDriverBy::cssSelector( $sortinoRatio ));
-                            $sortinoRatioData = $element->getText();
-                            break;
-                        }
-                        catch (
-                            \Facebook\WebDriver\Exception\StaleElementReferenceException | 
-                            \Facebook\WebDriver\Exception\NoSuchElementException |
-                            \Facebook\WebDriver\Exception\UnrecognizedExceptionException |
-                            \Facebook\WebDriver\Exception\NoSuchWindowException $e) {
-                            if ($i < $retryAttempts) { 
-                                sleep($retrySleep); 
-                            }
-                            else { 
-                                echo '"Retry error: #' . $i .'"';
-                                $client->takeScreenshot('screenshot.png');
-                                throw($e);
-                            }
-                        }
-                    }
-                    sleep($diagnoseTimer);
-
-
-                    // CSV add data
-                    $lines = [
-                        $coin,
-                        $exchange,
-                        $dateRange[1],
-                        $interval[1],
-                        $netProfitData,
-                        $buyAndHoldData,
-                        $difference,
-                        $tradesPerDay,
-                        $TotalTradesClosedData,
-                        $TotalTradesOpenData,
-                        $winningTradesData,
-                        $losingTradesData,
-                        $percentProfitableData,
-                        $winLossRatioData,
-                        $sharpeRatioData,
-                        $sortinoRatioData
-                    ];
-                    fputcsv( $file, $lines );
                 }
             }
         }
