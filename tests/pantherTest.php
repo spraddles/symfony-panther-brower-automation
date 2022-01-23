@@ -4,7 +4,6 @@
 
 namespace App\Tests;
 
-use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -24,6 +23,8 @@ class pantherTest extends PantherTestCase
     public function ExampleTest()
     {
 
+        /* VARIABLES * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
         $exchanges = [
             'binance'
         ];
@@ -42,6 +43,25 @@ class pantherTest extends PantherTestCase
 
         // coins
         $coins = [
+
+            // USDT pairs
+            /*'BTCUSDT',
+            'ETHUSDT',
+            'BNBUSDT',
+            'SOLUSDT',
+            'ADAUSDT',
+            'XRPUSDT',
+            'DOTUSDT',
+            'LUNAUSDT',
+            'MATICUSDT',
+            'LTCUSDT',
+            'TRXUSDT',
+            'BCHUSDT',
+            'XTZUSDT',
+            'EOSUSDT',
+            'WAXPUSDT'
+
+            // other pairs
             'ETHBTC',
             'MATICBTC',
             'XRPBTC',
@@ -64,7 +84,7 @@ class pantherTest extends PantherTestCase
             'EOSETH',
             'ADAETH',
             'LTCETH',
-            'TRXETH',
+            'TRXETH',*/
             'DOTETH',
             'MATICBNB',
             'XRPBNB',
@@ -102,7 +122,7 @@ class pantherTest extends PantherTestCase
         $openScriptMenu = '#bottom-area .bottom-widgetbar-content.scripteditor.tv-script-widget div[class^="rightControlsBlock-"] div[data-name="open-script"]';
         $openMyScript = '#overlap-manager-root div[class^="menuBox-"] div[class^="item-"]:first-of-type';
         $strategySearchInput = '#overlap-manager-root div[class^="container-"]:nth-of-type(2) div[class^="inputContainer-"] input';
-        $strategyName = 'Strategy_1';
+        $strategyName = 'Strategy_2';
         $strategySelect = '#overlap-manager-root div[class^="dialog-"] div[class^="wrapper-"] div[class^="container-"]:nth-of-type(4) div[class^="list-"] div[class^="itemRow-"] div[class*="itemInfo-"]';
         $closeStrategySearch = 'div[data-outside-boundary-for="open-user-script-dialog"] div[class^="wrapper-"] div[class^="container-"]:first-of-type span[class^="close-"]';
         $addToChart = '#bottom-area .bottom-widgetbar-content.scripteditor.tv-script-widget #tv-script-pine-editor-header-root div[class^="content-"] div[class^="rightControlsBlock-"] div[data-name="add-script-to-chart"]';
@@ -122,7 +142,7 @@ class pantherTest extends PantherTestCase
         // chart setting
         $chartSettings = '#bottom-area .bottom-widgetbar-content.backtesting .group:nth-of-type(2) .js-backtesting-open-format-dialog';
         $inputsTab = '#overlap-manager-root div[data-outside-boundary-for="indicator-properties-dialog"] div[class^="scrollWrap-"] div[class^="tabs-"] [data-value="inputs"]';
-        $selectArrow = '#overlap-manager-root div[data-outside-boundary-for="indicator-properties-dialog"] div[class^="scrollable-"] div[class^="content-"] div[class^="cell-"]:last-of-type span[class^="container-"] span[class^="inner-slot-"]:nth-of-type(2)';
+        $selectArrow = '#overlap-manager-root div[data-outside-boundary-for="indicator-properties-dialog"] div[class^="scrollable-"] div[class^="content-"] div[class^="cell-"]:nth-of-type(2) span[class^="container-"] span[class^="inner-slot-"]:nth-of-type(2)';
         $okButton = '#overlap-manager-root div[data-outside-boundary-for="indicator-properties-dialog"] div[class^="footer-"] div[class^="buttons-"] span[class^="submitButton-"] button';
 
         // time intervals
@@ -162,16 +182,15 @@ class pantherTest extends PantherTestCase
         $retrySleep = 4;
 
 
-        /* * * * * * * * * * * */
-        /* INITIALIZE
-        /* * * * * * * * * * * */
+        /* INITIALIZE * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-        $converter = new CssSelectorConverter();
         $client = self::createPantherClient(
             [],
             [],
             []
         );
+
+        /* START PROCESS * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
         
         // sign in
@@ -520,6 +539,7 @@ class pantherTest extends PantherTestCase
 
         for ($i = 0; true; $i++) {
             try {
+                sleep(1);
                 $client->executeScript("document.querySelector('".$strategySelect."').click()");
                 break;
             }
@@ -769,7 +789,7 @@ class pantherTest extends PantherTestCase
                         $client->executeScript("document.querySelector('".$selectArrow."').click()");
                         break;
                     }
-                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
+                    catch (\Facebook\WebDriver\Exception\JavascriptErrorException | \Facebook\WebDriver\Exception\StaleElementReferenceException $e) {
                         if ($i < $retryAttempts) { 
                             sleep($retrySleep); 
                         }
@@ -803,6 +823,7 @@ class pantherTest extends PantherTestCase
                 for ($i = 0; true; $i++) {
                     try {
                         $client->executeScript("document.querySelector('".$okButton."').click()");
+                        sleep(1);
                         break;
                     }
                     catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
@@ -882,7 +903,7 @@ class pantherTest extends PantherTestCase
                         sleep($diagnoseTimer);
                     }
 
-                    sleep(4);
+                    sleep(3);
 
                     // data points
                     for ($i = 0; true; $i++) {
