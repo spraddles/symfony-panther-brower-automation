@@ -125,7 +125,7 @@ class pantherTest extends PantherTestCase
         $pineScriptTab = '#footer-chart-panel div[class^="tabs-"] div[class^="tab-"]:nth-of-type(3) div[class^="title-"]';
         $strategyTesterTab = '#footer-chart-panel div[class^="tabs-"] div[class^="tab-"]:nth-of-type(4) div[class*=" active-"]';
         $openScriptMenu = '#bottom-area .bottom-widgetbar-content.scripteditor.tv-script-widget div[class^="rightControlsBlock-"] div[data-name="open-script"]';
-        $openMyScript = '#overlap-manager-root div[class^="menuWrap-"] div[class^="scrollWrap-"] div[class^="menuBox-"] :nth-child(4)';
+        $xpathMyScript = '//div[contains(text(),"My script…")]';
         $strategySearchInput = '#overlap-manager-root div[class^="container-"]:nth-of-type(2) div[class^="inputContainer-"] input';
         $strategySelect = '#overlap-manager-root div[class^="dialog-"] div[class^="wrapper-"] div[class^="container-"]:nth-of-type(4) div[class^="list-"] div[class^="itemRow-"] div[class*="itemInfo-"]';
         $closeStrategySearch = 'div[data-outside-boundary-for="open-user-script-dialog"] div[class^="wrapper-"] div[class^="container-"]:first-of-type span[class^="close-"]';
@@ -512,14 +512,7 @@ class pantherTest extends PantherTestCase
 
             for ($i = 0; true; $i++) {
                 try {
-                    //$client->executeScript("document.querySelector('".$openMyScript."').click()");
-
-                    $xpathMyScript = '//div[contains(text(),"My script…")]';
                     $client->executeScript("document.evaluate('".$xpathMyScript."', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null ).singleNodeValue.click()");
-
-
-
-
                     break;
                 }
                 catch (\Facebook\WebDriver\Exception\JavascriptErrorException $e) {
