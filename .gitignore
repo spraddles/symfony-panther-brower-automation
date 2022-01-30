@@ -24,3 +24,4 @@
 *.csv
 
 node_modules
+/tradingview/output/
