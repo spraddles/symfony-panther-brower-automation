@@ -1,0 +1,10 @@
+{
+    "name": "symfony-panther",
+    "version": "1.0.0",
+    "description": "A sample app scripty thing",
+    "scripts": {},
+    "dependencies": {
+        "mustache": "^4.2.0"
+    },
+    "devDependencies": {}
+}
