@@ -22,3 +22,5 @@
 *.env
 *.png
 *.csv
+
+node_modules
