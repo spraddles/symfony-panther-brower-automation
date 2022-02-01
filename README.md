@@ -19,6 +19,7 @@
 - composer require --dev dbrekelmans/bdi
 - vendor/bin/bdi detect drivers
 - bin/phpunit tests/pantherTest.php
+- sh ./mustache.sh (for templating)
 
 ## Output:
 - less combinations of coins, dataranges, and intervals will run faster... and vice versa
