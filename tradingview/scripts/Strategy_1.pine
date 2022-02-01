@@ -1,0 +1,41 @@
+//@version=4
+
+// Maximized Scalping On Trend (by Coinrule)
+
+strategy('Strategy_1', {{{header}}})
+
+{{{date_range}}}
+
+//MA inputs and calculations
+movingaverage_fast = sma(close, input(9))
+movingaverage_mid= sma(close, input(50))
+movingaverage_slow = sma(close, input (100))
+
+//Trend situation
+Bullish= crossunder(close, movingaverage_fast)
+
+Momentum = movingaverage_mid > movingaverage_slow
+
+// RSI inputs and calculations
+lengthRSI = 14
+RSI = rsi(close, lengthRSI)
+
+//Entry
+strategy.entry(id="long", long = true, when = Bullish and Momentum and RSI > 50 and date_range)
+
+//Exit
+
+TP = input(70)
+SL =input(30)
+longTakeProfit  = RSI > TP
+longStopPrice = RSI < SL
+
+strategy.close("long", when = longStopPrice or longTakeProfit and date_range)
+
+plot(movingaverage_fast, color=color.black, linewidth=2 )
+plot(movingaverage_mid, color=color.orange, linewidth=2)
+plot(movingaverage_slow, color=color.purple, linewidth=2)
+
+
+
+
