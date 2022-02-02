@@ -4,21 +4,6 @@ strategy('Strategy_3', {{{header}}})
 
 {{{date_range}}}
 
-
-// © KryptoNight
-// comment/uncomment Study/Strategy to easily switch modes
-// study("Ichimoku Kinko Hyo Cloud - no offset - no repaint - RSI filter - alerts", shorttitle="IchiCloud + RSI - alerts", overlay=true)
-// ============================================================================== Strategy mode - uncomment to activate
-// Ichimoku Kinko Hyo Cloud - no offset - no repaint - RSI filter - strategy
-
-strategy("Strategy_4", shorttitle="IchiCloud + RSI - Strategy Tester Mode", overlay=true, linktoseries=true, pyramiding = 0,
-  currency = currency.USD, initial_capital = 1000, default_qty_type = strategy.percent_of_equity, default_qty_value = 100,
-  calc_on_every_tick = true, calc_on_order_fills = true, commission_type = strategy.commission.percent, commission_value = 0.1, slippage=4)
-
-// ==============================================================================
-
-// ------------------------------------------------------------------------------
-
 ichiCloud_offset   = input(false, title="Standard Ichimoku Cloud")                  // with the visual offset
 ichiCloud_noOffset = input(true,  title="Ichimoku Cloud - no offset - no repaint")  // without the visual offset
 
@@ -158,4 +143,7 @@ if (short_signal)
 if (exit_short)
     strategy.close("Short")
 // ==============================================================================
+
+
+
 
