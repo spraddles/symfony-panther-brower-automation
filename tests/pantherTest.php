@@ -31,8 +31,13 @@ class pantherTest extends PantherTestCase
 
         // strategies
         $strategies = [
+            /*'Strategy_1',
             'Strategy_2',
-            'Strategy_6',
+            'Strategy_3',
+            'Strategy_4',*/
+            'Strategy_4a',
+            /*'Strategy_5',
+            'Strategy_6'*/
         ];
 
         // coins
@@ -53,7 +58,7 @@ class pantherTest extends PantherTestCase
             'BCHUSDT',
             'XTZUSDT',
             'EOSUSDT',
-            'WAXPUSDT'
+            'WAXPUSDT',
 
             // other pairs
             /*'ETHBTC',
@@ -140,7 +145,10 @@ class pantherTest extends PantherTestCase
             ['div[id$="_item_16-weeks"]', '16 weeks', 112],
             ['div[id$="_item_8-weeks"]', '8 weeks', 56],
             ['div[id$="_item_3-weeks"]', '3 weeks', 21],
-            ['div[id$="_item_Bad-period-BTC"]', 'Bad period BTC', 99]
+            ['div[id$="_item_Good-period-BTC"]', 'Good period BTC', 26],
+            ['div[id$="_item_Bad-period-BTC"]', 'Bad period BTC', 99],
+            ['div[id$="_item_Up-down"]', 'Up down', 19],
+            ['div[id$="_item_Down-up"]', 'Down up', 50]
         ];
 
         // chart setting
@@ -151,9 +159,9 @@ class pantherTest extends PantherTestCase
 
         // time intervals
         $intervals = [
-            ['#overlap-manager-root [data-value="1M"]', '1 Month'],
+            /*['#overlap-manager-root [data-value="1M"]', '1 Month'],
             ['#overlap-manager-root [data-value="1W"]', '1 Week'],
-            ['#overlap-manager-root [data-value="1D"]', '1 Day'],
+            ['#overlap-manager-root [data-value="1D"]', '1 Day'],*/
             ['#overlap-manager-root [data-value="240"]', '4 hrs'],
             ['#overlap-manager-root [data-value="180"]', '3 hrs'],
             ['#overlap-manager-root [data-value="120"]', '2 hrs'],
@@ -181,7 +189,7 @@ class pantherTest extends PantherTestCase
         $csvHeaders = array('Coin','Exchange','Date range','Interval','Net profit','B+H','Difference','Trades p/day','Total Trades closed','Trades open','Winning trades','Losing trades','Percent profitable','Win loss ratio','Sharpe Ratio','Sortino Ratio');
 
         // Other
-        $diagnoseTimer = 0;
+        $diagnoseTimer = 1;
         $retryAttempts = 4; // actually 4 = 5 as it starts from 0 not 1
         $retrySleep = 4;
 
@@ -890,9 +898,11 @@ class pantherTest extends PantherTestCase
                         }
                         sleep($diagnoseTimer);
 
-
                         // make sure 'performance summary' pane is open
-                        if (!$client->findElement(WebDriverBy::cssSelector( $performanceSummaryActive ))) {
+                        try {
+                            $client->findElement(WebDriverBy::cssSelector( $performanceSummaryActive ));
+                        }
+                        catch(\Facebook\WebDriver\Exception\NoSuchElementException) {
                             for ($i = 0; true; $i++) {
                                 try {
                                     $client->executeScript("document.querySelector('".$performanceSummaryTab."').click()");
